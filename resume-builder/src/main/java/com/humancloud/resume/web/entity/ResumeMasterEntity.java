@@ -3,6 +3,8 @@ package com.humancloud.resume.web.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -23,5 +25,10 @@ public class ResumeMasterEntity {
     private SkillSet skillSet = new SkillSet();
     @OneToMany(cascade = CascadeType.ALL)
     private List<WorkExperience> workExperience = new ArrayList<WorkExperience>();
+
+    private String createdBy;
+    private String createdDate;
+    private String modifiedBy;
+    private String modifiedDate;
 
 }

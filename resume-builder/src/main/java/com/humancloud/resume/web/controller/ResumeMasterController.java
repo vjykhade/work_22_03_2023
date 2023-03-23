@@ -7,15 +7,21 @@ import com.humancloud.resume.web.service.ResumeService;
 import com.lowagie.text.DocumentException;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import org.hibernate.dialect.SimpleDatabaseVersion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 public class ResumeMasterController {
@@ -29,6 +35,20 @@ public class ResumeMasterController {
     @PostMapping("/savedata")
     public ResumeMasterEntity saveResumeData (@Valid @RequestBody ResumeMasterEntity resumeMasterEntity)
     {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        resumeMasterEntity.setCreatedBy("admin");
+        resumeMasterEntity.setCreatedDate(simpleDateFormat.format(Date.from(Instant.now())));
+        resumeMasterEntity.setWorkExperience(resumeMasterEntity.getWorkExperience().stream().map(rm->{
+            rm.setCreatedBy("admin");
+            rm.setCreatedDate(simpleDateFormat.format(Date.from(Instant.now())));
+            rm.getProjects().stream().map(p -> {
+                p.setCreatedBy("admin");
+                p.setCreatedDate(simpleDateFormat.format(Date.from(Instant.now())));
+                return p;
+            }).collect(Collectors.toList());
+            return rm;
+        }).collect(Collectors.toList())
+        );
         return resumeRepository.save(resumeMasterEntity);
     }
 
@@ -46,7 +66,7 @@ public class ResumeMasterController {
          }
     }
 
-    @GetMapping("/download-pdf/{id}")
+    @GetMapping("/downloadpdf/{id}")
     public void generatePDFFromDB(@PathVariable("id") String uuid, HttpServletResponse response) throws DocumentException, IOException
     {
         response.setContentType("application/pdf");

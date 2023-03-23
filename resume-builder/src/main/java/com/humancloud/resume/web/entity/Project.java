@@ -5,6 +5,7 @@ import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Embeddable
@@ -19,5 +20,10 @@ public class Project {
     private String technologies;
     @Column(length = 2000)
     private List<String> responsibilities;
+    private String createdBy;
+    private String createdDate;
+    private String modifiedBy;
+    private String modifiedDate;
+
 
 }

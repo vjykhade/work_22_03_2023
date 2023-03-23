@@ -11,8 +11,12 @@ import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -22,13 +26,10 @@ import java.util.Optional;
 
 public class PDFGeneratorHelper {
 
-    public void GeneratePDF(Optional<ResumeMasterEntity> resumeMasterEntity, HttpServletResponse response)
+     public void GeneratePDF(Optional<ResumeMasterEntity> resumeMasterEntity, HttpServletResponse response)
     {
         try
         {
-
-            System.out.println("List Downloaded: "+resumeMasterEntity.get().getPersonalDetails().getEmpName());
-
             Document document = new Document(PageSize.A4);
             PdfWriter.getInstance(document, response.getOutputStream());
             document.open();
@@ -41,10 +42,9 @@ public class PDFGeneratorHelper {
             name.setAlignment(Paragraph.ALIGN_LEFT);
             document.add(name);
 
-            com.lowagie.text.Image image = Image.getInstance("logo_hc.png");
+            com.lowagie.text.Image image = Image.getInstance("https://i.imgur.com/Qd09mpM.png");
             image.scalePercent (50.0f);
             image.setAbsolutePosition(460, 770);
-
             document.add(image);
 
             PdfPTable table_header = new PdfPTable(2);
@@ -81,7 +81,7 @@ public class PDFGeneratorHelper {
             table_p_summary.setWidthPercentage(100);
             table_p_summary.setWidths(new int[] {12});
             table_p_summary.setSpacingBefore(5);
-            table_p_summary.setSpacingAfter(5);
+            //table_p_summary.setSpacingAfter(5);
 
             PdfPCell cell_p_summary = new PdfPCell();
             cell_p_summary.setBackgroundColor(new Color(111, 156, 250));
@@ -206,7 +206,7 @@ public class PDFGeneratorHelper {
             table_work_experience.setWidthPercentage(100);
             table_work_experience.setWidths(new int[] {12});
             table_work_experience.setSpacingBefore(5);
-            table_work_experience.setSpacingAfter(10);
+            table_work_experience.setSpacingAfter(5);
 
             PdfPCell cell_work_experience = new PdfPCell();
             cell_work_experience.setBackgroundColor(new Color(111, 156, 250));
